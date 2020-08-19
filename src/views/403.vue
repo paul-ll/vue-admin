@@ -23,6 +23,7 @@
   export default {
     created() {
       this.$Loading.finish();
+      
     }
   }
 </script>
