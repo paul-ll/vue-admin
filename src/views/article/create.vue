@@ -64,7 +64,9 @@
         id: this.$route.params.id,
         detail: null,
         categoryList: [],
-        imgFile:{},
+        imgFile:{
+          
+        },
         formValidate: {
           title: '',
           author: '',
