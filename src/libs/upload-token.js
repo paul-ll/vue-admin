@@ -9,7 +9,7 @@ export default async function getUploadToken() {
   return new Promise((resolve, reject) => {
     let mac = new qiniu.auth.digest.Mac(ACCESS_KEY, SECRET_KEY);
     let options = {
-      scope: "lvleibolg",
+      scope: "lvlbolg",
       expires: 7200
     };
     let putPolicy = new qiniu.rs.PutPolicy(options);

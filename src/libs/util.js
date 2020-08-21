@@ -7,9 +7,12 @@ util.title = function (title) {
   window.document.title = title;
 };
 
-const ajaxUrl = process.env.NODE_ENV === 'development' ?
-  'http://localhost:3000/v1' :
-  'http://95.163.203.224:3000/v1';
+// const ajaxUrl = process.env.NODE_ENV === 'development' ?
+//   'http://localhost:3000/v1' :
+//   'http://95.163.203.224:3000/v1';
+  const ajaxUrl = process.env.NODE_ENV === 'development' ?
+  'http://95.163.203.224:3000/v1' :
+  ' http://localhost:3000/v1';
 
 util.ajax_url = ajaxUrl;
 

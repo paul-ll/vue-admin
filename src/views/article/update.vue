@@ -18,7 +18,7 @@
             <Upload
               multiple
               type="drag"
-              action="http://up-z0.qiniu.com"
+              action="http://up-na0.qiniup.com"
               :show-upload-list="false"
               :on-success="uploadSuccess"
               :on-error="uploadError"
@@ -38,7 +38,10 @@
         <mavon-editor
           v-model="formValidate.content"
           :ishljs="true"
-          ref=md>
+          ref='md'
+          @imgAdd="handleEditorImgAdd"
+          @imgDel="handleEditorImgDel"
+          >
         </mavon-editor>
 
       </FormItem>
@@ -50,6 +53,7 @@
   </section>
 </template>
 <script>
+  import axios from 'axios';
   import {mapActions} from 'vuex';
   import getUploadToken from '../../libs/upload-token'
 
@@ -60,6 +64,7 @@
         id: this.$route.params.id,
         detail: null,
         categoryList: [],
+         imgFile:{},
         formValidate: {
           title: '',
           author: '',
@@ -96,7 +101,7 @@
       }),
       // 上传图片成功
       uploadSuccess(response) {
-        const url = `http://q10bwe0yd.bkt.clouddn.com/${response.key}`;
+        const url = `http://qfeh7xl1u.bkt.gdipper.com/${response.key}`;
         this.formValidate.cover = url;
         this.$Message.success('上传成功!');
       },
@@ -164,7 +169,42 @@
       },
       handleReset(name) {
         this.$refs[name].resetFields();
-      }
+      },
+      handleEditorImgAdd (pos, $file) {
+            let formdata = new FormData()
+            formdata.append('file', $file)
+            formdata.append('token', this.token)
+            this.imgFile[pos] = $file
+            axios.post('http://up-na0.qiniup.com', formdata).then(res => {
+              console.log(res)
+                if (res.data.key) {
+                    this.$Message.success('上传成功')
+                    let url = `http://qfeh7xl1u.bkt.gdipper.com/${res.data.key}`
+                    let name = $file.name
+                    if (name.includes('-')) {
+                        name = name.replace(/-/g, '')
+                    }
+                    let content = this.formValidate.content
+                    // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)  这里是必须要有的
+                    if (content.includes(name)) {
+                        let oStr = `(${pos})`
+                        let nStr = `(${url})`
+                        let index = content.indexOf(oStr)
+                        let str = content.replace(oStr, '')
+                        let insertStr = (soure, start, newStr) => {
+                            return soure.slice(0, start) + newStr + soure.slice(start)
+                        }
+                        this.formValidate.content = insertStr(str, index, nStr)
+                    }
+                } else {
+                    this.$Message.error(res.data.msg)
+                }
+            })
+        },
+        handleEditorImgDel (pos) {
+            delete this.imgFile[pos]
+        },
+
     }
   }
 </script>

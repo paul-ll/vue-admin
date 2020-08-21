@@ -33,6 +33,7 @@ export default {
 
   // 创建文章
   create(params) {
+    console.log(params)
     return fetch.post('/article', params);
   }
 }
